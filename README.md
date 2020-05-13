@@ -29,7 +29,7 @@ MIT
 [DependencyStatusIMGURL]:   https://img.shields.io/david/coderaiser/redfork.svg?style=flat
 [LicenseIMGURL]:            https://img.shields.io/badge/license-MIT-317BF9.svg?style=flat
 [NPMURL]:                   https://npmjs.org/package/redfork "npm"
-[BuildStatusURL]:           https://travis-ci.org/coderaiser/redfork  "Build Status"
+[BuildStatusURL]:           https://travis-ci.com/coderaiser/redfork  "Build Status"
 [DependencyStatusURL]:      https://david-dm.org/coderaiser/redfork "Dependency Status"
 [LicenseURL]:               https://tldrlegal.com/license/mit-license "MIT License"
 
