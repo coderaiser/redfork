@@ -1,0 +1,75 @@
+{
+  "name": "redfork",
+  "version": "1.0.0",
+  "description": "run command in all sub dirs",
+  "main": "bin/redfork.js",
+  "bin": {
+    "redfork": "bin/redfork.js",
+    "redfork-completion": "bin/redfork-completion.js"
+  },
+  "nyc": {
+    "exclude": [
+      ".*",
+      "test"
+    ]
+  },
+  "scripts": {
+    "lint": "madrun lint",
+    "fix:lint": "madrun fix:lint",
+    "test": "madrun test",
+    "watch:test": "madrun watch:test",
+    "watcher": "madrun watcher",
+    "coverage": "madrun coverage",
+    "report": "madrun report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coderaiser/redfork.git"
+  },
+  "keywords": [
+    "redfork",
+    "scripts",
+    "package",
+    "npm",
+    "npm run",
+    "npm-scripts",
+    "tool",
+    "cli",
+    "commond",
+    "task",
+    "parallel",
+    "serial",
+    "run",
+    "tool",
+    "commandline",
+    "command"
+  ],
+  "author": "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)",
+  "bugs": {
+    "url": "https://github.com/coderaiser/redfork/issues"
+  },
+  "homepage": "https://github.com/coderaiser/redfork",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "try-catch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@cloudcmd/stub": "^3.1.0",
+    "coveralls": "^3.0.0",
+    "eslint": "^6.0.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-putout": "^4.0.0",
+    "madrun": "^6.0.1",
+    "mock-require": "^3.0.3",
+    "nodemon": "^2.0.0",
+    "nyc": "^15.0.0",
+    "runsome": "^1.0.0",
+    "supertape": "^1.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
