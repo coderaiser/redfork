@@ -7,59 +7,28 @@ const {reRequire} = require('mock-require');
 const stub = require('@cloudcmd/stub');
 
 test('redfork: readdirSync', async (t) => {
-    const {readdirSync} = fs;
-    const {execSync} = child_process;
-    
     const readdirSyncStub = stub().returns([]);
-    const execSyncStub = stub();
     
-    fs.readdirSync = readdirSyncStub;
-    child_process.execSync = execSyncStub;
-    
-    const redfork = reRequire('..');
-    await redfork;
-    
-    fs.readdirSync = readdirSync;
-    child_process.execSync = execSync;
+    await run({
+        readdirSyncStub,
+    });
     
     t.ok(readdirSyncStub.calledWith('.'));
     t.end();
 });
 
 test('redfork: execSync', async (t) => {
-    const {readdirSync} = fs;
-    const {execSync} = child_process;
-    const {argv, cwd} = process;
-    const {log, error} = console;
-    
     const readdirSyncStub = stub().returns(['dir']);
-    const execSyncStub = stub();
     const cwdStub = stub().returns('/home/abc');
-    const logStub = stub();
-    const errorStub = stub();
+    const argvMock = ['', '', 'ls'];
     
-    fs.readdirSync = readdirSyncStub;
-    child_process.execSync = execSyncStub;
-    console.log = logStub;
-    console.error = errorStub;
-    
-    process.cwd = cwdStub;
-    process.argv = ['', '', 'ls'];
-    
-    const redfork = reRequire('..');
-    await redfork;
-    
-    fs.readdirSync = readdirSync;
-    child_process.execSync = execSync;
-    
-    process.argv = argv;
-    process.cwd = cwd;
-    
-    console.log = log;
-    console.error = error;
+    const {execSyncStub} = await run({
+        readdirSyncStub,
+        cwdStub,
+        argvMock,
+    });
     
     const dir = '/home/abc/dir';
-    
     const expected = [
         'ls', {
             stdio: [0, 1, 2, 'pipe'],
@@ -72,72 +41,32 @@ test('redfork: execSync', async (t) => {
 });
 
 test('redfork: execSync: error', async (t) => {
-    const {readdirSync} = fs;
-    const {execSync} = child_process;
-    const {argv, cwd} = process;
-    const {log, error} = console;
-    
     const readdirSyncStub = stub().returns(['dir']);
     const execSyncStub = stub().throws(Error('hello'));
     const cwdStub = stub().returns('/home/abc');
-    const logStub = stub();
-    const errorStub = stub();
+    const argvMock = ['', '', 'ls'];
     
-    fs.readdirSync = readdirSyncStub;
-    child_process.execSync = execSyncStub;
-    console.log = logStub;
-    console.error = errorStub;
-    
-    process.cwd = cwdStub;
-    process.argv = ['', '', 'ls'];
-    
-    const redfork = reRequire('..');
-    await redfork;
-    
-    fs.readdirSync = readdirSync;
-    child_process.execSync = execSync;
-    
-    process.argv = argv;
-    process.cwd = cwd;
-    
-    console.log = log;
-    console.error = error;
+    const {errorStub} = await run({
+        readdirSyncStub,
+        execSyncStub,
+        cwdStub,
+        argvMock,
+    });
     
     t.ok(errorStub.calledWith('hello'));
     t.end();
 });
 
 test('redfork: console.log', async (t) => {
-    const {readdirSync} = fs;
-    const {execSync} = child_process;
-    const {argv, cwd} = process;
-    const {log, error} = console;
-    
     const readdirSyncStub = stub().returns(['dir']);
-    const execSyncStub = stub();
     const cwdStub = stub().returns('/home/abc');
-    const logStub = stub();
-    const errorStub = stub();
+    const argvMock = ['', '', 'ls'];
     
-    fs.readdirSync = readdirSyncStub;
-    child_process.execSync = execSyncStub;
-    console.log = logStub;
-    console.error = errorStub;
-    
-    process.cwd = cwdStub;
-    process.argv = ['', '', 'ls'];
-    
-    const redfork = reRequire('..');
-    await redfork;
-    
-    fs.readdirSync = readdirSync;
-    child_process.execSync = execSync;
-    
-    process.argv = argv;
-    process.cwd = cwd;
-    
-    console.log = log;
-    console.error = error;
+    const {logStub} = await run({
+        readdirSyncStub,
+        cwdStub,
+        argvMock,
+    });
     
     const dir = '/home/abc/dir';
     
@@ -146,16 +75,32 @@ test('redfork: console.log', async (t) => {
 });
 
 test('redfork: no command', async (t) => {
+    const readdirSyncStub = stub().returns(['dir']);
+    const cwdStub = stub().returns('/home/abc');
+    
+    const {logStub} = await run({
+        readdirSyncStub,
+        cwdStub,
+    });
+    
+    t.ok(logStub.calledWith('nothing to do, exit'));
+    t.end();
+});
+
+async function run(stubs = {}) {
     const {readdirSync} = fs;
     const {execSync} = child_process;
     const {argv, cwd} = process;
     const {log, error} = console;
     
-    const readdirSyncStub = stub().returns(['dir']);
-    const execSyncStub = stub();
-    const cwdStub = stub().returns('/home/abc');
-    const logStub = stub();
-    const errorStub = stub();
+    const {
+        readdirSyncStub = stub(),
+        execSyncStub = stub(),
+        cwdStub = stub(),
+        logStub = stub(),
+        errorStub = stub(),
+        argvMock = ['', ''],
+    } = stubs;
     
     fs.readdirSync = readdirSyncStub;
     child_process.execSync = execSyncStub;
@@ -163,7 +108,7 @@ test('redfork: no command', async (t) => {
     console.error = errorStub;
     
     process.cwd = cwdStub;
-    process.argv = ['', ''];
+    process.argv = argvMock;
     
     const redfork = reRequire('..');
     await redfork;
@@ -177,7 +122,12 @@ test('redfork: no command', async (t) => {
     console.log = log;
     console.error = error;
     
-    t.ok(logStub.calledWith('nothing to do, exit'));
-    t.end();
-});
+    return {
+        readdirSyncStub,
+        execSyncStub,
+        cwdStub,
+        logStub,
+        errorStub,
+    }
+}
 
