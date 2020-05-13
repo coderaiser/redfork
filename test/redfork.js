@@ -28,11 +28,11 @@ test('redfork: execSync', async (t) => {
         argvMock,
     });
     
-    const dir = '/home/abc/dir';
+    const cwd = '/home/abc/dir';
     const expected = [
         'ls', {
             stdio: [0, 1, 2, 'pipe'],
-            cwd: dir,
+            cwd,
         },
     ];
     
@@ -128,6 +128,6 @@ async function run(stubs = {}) {
         cwdStub,
         logStub,
         errorStub,
-    }
+    };
 }
 
