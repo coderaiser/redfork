@@ -4,8 +4,7 @@
   "description": "run command in all sub dirs",
   "main": "bin/redfork.js",
   "bin": {
-    "redfork": "bin/redfork.js",
-    "redfork-completion": "bin/redfork-completion.js"
+    "redfork": "bin/redfork.js"
   },
   "nyc": {
     "exclude": [
