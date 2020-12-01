@@ -3,12 +3,12 @@
 const {run} = require('madrun');
 
 module.exports = {
-    'lint': () => 'putout bin test .madrun.js',
+    'lint': () => 'putout .',
     'fix:lint': () => run('lint', '--fix'),
     'test': () => `tape 'test/**/*.js'`,
-    'watch:test': () => run('watcher', run('test')),
+    'watch:test': async () => run('watcher', await run('test')),
     'watcher': () => 'nodemon -w test -w bin --exec',
-    'coverage': () => `nyc ${run('test')}`,
+    'coverage': async () => `nyc ${await run('test')}`,
     'report': () => 'nyc report --reporter=text-lcov | coveralls',
 };
 
