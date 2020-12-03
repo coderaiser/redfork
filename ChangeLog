@@ -1,0 +1,10 @@
+2020.12.03, v2.0.0
+
+feature:
+- (redfork) drop support of node < 14
+- (package) eslint-plugin-putout v6.8.1
+- (package) madrun v8.0.0
+- (package) supertape v3.0.1
+- (package) eslint v7.0.0
+- (package) supertape v2.0.1
+
