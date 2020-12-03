@@ -1,29 +1,31 @@
-'use strict';
+import test from 'supertape';
+import {createMockImport} from 'mock-import';
+import stub from '@cloudcmd/stub';
 
-const fs = require('fs');
-const child_process = require('child_process');
-const test = require('supertape');
-const {reRequire} = require('mock-require');
-const stub = require('@cloudcmd/stub');
+const {
+    reImport,
+    mockImport,
+    stopAll,
+} = createMockImport(import.meta.url);
 
 test('redfork: readdirSync', async (t) => {
-    const readdirSyncStub = stub().returns([]);
+    const readdirSync = stub().returns([]);
     
     await run({
-        readdirSyncStub,
+        readdirSync,
     });
     
-    t.ok(readdirSyncStub.calledWith('.'));
+    t.ok(readdirSync.calledWith('.'));
     t.end();
 });
 
 test('redfork: execSync', async (t) => {
-    const readdirSyncStub = stub().returns(['dir']);
+    const readdirSync = stub().returns(['dir']);
     const cwdStub = stub().returns('/home/abc');
     const argvMock = ['', '', 'ls'];
     
-    const {execSyncStub} = await run({
-        readdirSyncStub,
+    const {execSync} = await run({
+        readdirSync,
         cwdStub,
         argvMock,
     });
@@ -36,19 +38,19 @@ test('redfork: execSync', async (t) => {
         },
     ];
     
-    t.ok(execSyncStub.calledWith(...expected));
+    t.ok(execSync.calledWith(...expected));
     t.end();
 });
 
 test('redfork: execSync: error', async (t) => {
-    const readdirSyncStub = stub().returns(['dir']);
-    const execSyncStub = stub().throws(Error('hello'));
+    const readdirSync = stub().returns(['dir']);
+    const execSync = stub().throws(Error('hello'));
     const cwdStub = stub().returns('/home/abc');
     const argvMock = ['', '', 'ls'];
     
     const {errorStub} = await run({
-        readdirSyncStub,
-        execSyncStub,
+        readdirSync,
+        execSync,
         cwdStub,
         argvMock,
     });
@@ -58,12 +60,12 @@ test('redfork: execSync: error', async (t) => {
 });
 
 test('redfork: console.log', async (t) => {
-    const readdirSyncStub = stub().returns(['dir']);
+    const readdirSync = stub().returns(['dir']);
     const cwdStub = stub().returns('/home/abc');
     const argvMock = ['', '', 'ls'];
     
     const {logStub} = await run({
-        readdirSyncStub,
+        readdirSync,
         cwdStub,
         argvMock,
     });
@@ -75,11 +77,11 @@ test('redfork: console.log', async (t) => {
 });
 
 test('redfork: no command', async (t) => {
-    const readdirSyncStub = stub().returns(['dir']);
+    const readdirSync = stub().returns(['dir']);
     const cwdStub = stub().returns('/home/abc');
     
     const {logStub} = await run({
-        readdirSyncStub,
+        readdirSync,
         cwdStub,
     });
     
@@ -88,33 +90,36 @@ test('redfork: no command', async (t) => {
 });
 
 async function run(stubs = {}) {
-    const {readdirSync} = fs;
-    const {execSync} = child_process;
     const {argv, cwd} = process;
     const {log, error} = console;
     
     const {
-        readdirSyncStub = stub(),
-        execSyncStub = stub(),
+        readdirSync = stub(),
+        execSync = stub(),
         cwdStub = stub(),
         logStub = stub(),
         errorStub = stub(),
         argvMock = ['', ''],
     } = stubs;
     
-    fs.readdirSync = readdirSyncStub;
-    child_process.execSync = execSyncStub;
     console.log = logStub;
     console.error = errorStub;
     
     process.cwd = cwdStub;
     process.argv = argvMock;
     
-    const redfork = reRequire('..');
+    mockImport('fs', {
+        readdirSync,
+    });
+    
+    mockImport('child_process', {
+        execSync,
+    });
+    
+    const redfork = await reImport('..');
     await redfork;
     
-    fs.readdirSync = readdirSync;
-    child_process.execSync = execSync;
+    stopAll();
     
     process.argv = argv;
     process.cwd = cwd;
@@ -123,8 +128,8 @@ async function run(stubs = {}) {
     console.error = error;
     
     return {
-        readdirSyncStub,
-        execSyncStub,
+        readdirSync,
+        execSync,
         cwdStub,
         logStub,
         errorStub,

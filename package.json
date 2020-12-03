@@ -2,6 +2,7 @@
   "name": "redfork",
   "version": "1.0.0",
   "description": "run command in all sub dirs",
+  "type": "module",
   "main": "bin/redfork.js",
   "bin": {
     "redfork": "bin/redfork.js"
@@ -42,18 +43,20 @@
   "homepage": "https://github.com/coderaiser/redfork",
   "license": "MIT",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "dependencies": {
     "try-catch": "^3.0.0"
   },
   "devDependencies": {
     "@cloudcmd/stub": "^3.1.0",
+    "c8": "^7.3.5",
     "coveralls": "^3.0.0",
     "eslint": "^7.0.0",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-putout": "^6.8.1",
     "madrun": "^8.0.0",
+    "mock-import": "^1.0.0",
     "mock-require": "^3.0.3",
     "nodemon": "^2.0.0",
     "nyc": "^15.0.0",

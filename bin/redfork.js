@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
-'use strict';
-
-const {join} = require('path');
-const {execSync} = require('child_process');
-const {readdirSync} = require('fs');
-const tryCatch = require('try-catch');
+import {join} from 'path';
+import {execSync} from 'child_process';
+import {readdirSync} from 'fs';
+import tryCatch from 'try-catch';
 
 const joinCwd = (a) => (b) => join(a, b);
 
-module.exports = main();
+export default main();
 
 async function main() {
     const {
