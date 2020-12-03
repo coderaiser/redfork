@@ -13,6 +13,7 @@ test('redfork: readdirSync', async (t) => {
     
     await run({
         readdirSync,
+        argvMock: ['', '', 'ls'],
     });
     
     t.ok(readdirSync.calledWith('.'));
@@ -31,6 +32,52 @@ test('redfork: execSync', async (t) => {
     });
     
     const cwd = '/home/abc/dir';
+    const expected = [
+        'ls', {
+            stdio: [0, 1, 2, 'pipe'],
+            cwd,
+        },
+    ];
+    
+    t.ok(execSync.calledWith(...expected));
+    t.end();
+});
+
+test('redfork: execSync: pattern: not match', async (t) => {
+    const readdirSync = stub().returns(['dir']);
+    const cwdStub = stub().returns('/home/abc');
+    const argvMock = ['', '', 'ls', '-p', 'hello*'];
+    
+    const {execSync} = await run({
+        readdirSync,
+        cwdStub,
+        argvMock,
+    });
+    
+    const cwd = '/home/abc/dir';
+    const expected = [
+        'ls', {
+            stdio: [0, 1, 2, 'pipe'],
+            cwd,
+        },
+    ];
+    
+    t.notOk(execSync.called, 'should not call execSync');
+    t.end();
+});
+
+test('redfork: execSync: pattern', async (t) => {
+    const readdirSync = stub().returns(['hello-world']);
+    const cwdStub = stub().returns('/home/abc');
+    const argvMock = ['', '', 'ls', '-p', 'hello*'];
+    
+    const {execSync} = await run({
+        readdirSync,
+        cwdStub,
+        argvMock,
+    });
+    
+    const cwd = '/home/abc/hello-world';
     const expected = [
         'ls', {
             stdio: [0, 1, 2, 'pipe'],

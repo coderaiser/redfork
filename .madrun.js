@@ -9,7 +9,9 @@ export default {
     'test': () => run('test:base', '', {
         NODE_OPTIONS,
     }),
-    'watch:test': async () => run('watcher', await run('test')),
+    'watch:test': async () => run('watcher', await run('test:base'), {
+        NODE_OPTIONS,
+    }),
     'watcher': () => 'nodemon -w test -w bin --exec',
     'coverage:base': async () => `c8 ${await run('test:base')}`,
     'coverage': () => run('coverage:base', '', {

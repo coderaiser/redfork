@@ -14,11 +14,20 @@ npm i redfork -g
 redfork 'ls -lha'
 ```
 
+## Pattern
+
+When you need to filter directories, you can use `-p`, `--pattern` argument:
+
+```
+redfork 'ls -lha' -p plugin-*
+```
+
 Will show content of all subdirectories.
 
 ## Related
 
-- [redrun](https://github.com/coderaiser/redrun) - CLI tool to run multiple npm-scripts fast.
+- [redrun](https://github.com/coderaiser/redrun) - CLI tool to run multiple npm-scripts fast;
+- [madrun](https://github.com/coderaiser/madrun) - CLI tool to run multiple npm-scripts in a madly comfortable way
 
 ## License
 
