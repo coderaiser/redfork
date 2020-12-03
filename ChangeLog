@@ -1,3 +1,9 @@
+2020.12.03, v2.1.0
+
+feature:
+- (redfork) add support of -p, --pattern
+
+
 2020.12.03, v2.0.0
 
 feature:
