@@ -2,6 +2,8 @@
 
 CLI tool to run command in multiple subdirectories.
 
+![Refork](https://github.com/coderaiser/redfork/raw/master/img/redfork.svg "Refork")
+
 ## Install
 
 ```
