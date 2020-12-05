@@ -46,6 +46,7 @@
     "node": ">=14"
   },
   "dependencies": {
+    "picomatch": "^2.2.2",
     "try-catch": "^3.0.0",
     "yargs-parser": "^20.2.4"
   },

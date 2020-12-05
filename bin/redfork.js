@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {join} from 'path';
+import {createRequire} from 'module';
 import {execSync} from 'child_process';
 import {readdirSync} from 'fs';
 import tryCatch from 'try-catch';
@@ -17,17 +18,33 @@ async function main() {
         argv,
     } = process;
     
-    const {_, pattern} = yargsParser(argv.slice(2), {
-        default: {
-            pattern: '*',
+    const {
+        _,
+        pattern,
+        version,
+    } = yargsParser(
+        argv.slice(2),
+        {
+            default: {
+                pattern: '*',
+            },
+            boolean: [
+                'version',
+            ],
+            string: [
+                'pattern',
+            ],
+            alias: {
+                p: 'pattern',
+                v: 'version',
+            },
         },
-        string: [
-            'pattern',
-        ],
-        alias: {
-            'p': 'pattern'
-        }
-    });
+    );
+    
+    if (version) {
+        const require = createRequire(import.meta.url);
+        return console.log(`v${require('../package').version}`);
+    }
     
     const [command] = _;
     

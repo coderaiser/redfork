@@ -1,3 +1,4 @@
+import {createRequire} from 'module';
 import test from 'supertape';
 import {createMockImport} from 'mock-import';
 import stub from '@cloudcmd/stub';
@@ -7,6 +8,20 @@ const {
     mockImport,
     stopAll,
 } = createMockImport(import.meta.url);
+
+test('redfork: version', async (t) => {
+    const logStub = stub();
+    const require = createRequire(import.meta.url);
+    const {version} = require('../package');
+    
+    await run({
+        logStub,
+        argvMock: ['', '', '-v'],
+    });
+    
+    t.ok(logStub.calledWith(`v${version}`));
+    t.end();
+});
 
 test('redfork: readdirSync', async (t) => {
     const readdirSync = stub().returns([]);
@@ -53,14 +68,6 @@ test('redfork: execSync: pattern: not match', async (t) => {
         cwdStub,
         argvMock,
     });
-    
-    const cwd = '/home/abc/dir';
-    const expected = [
-        'ls', {
-            stdio: [0, 1, 2, 'pipe'],
-            cwd,
-        },
-    ];
     
     t.notOk(execSync.called, 'should not call execSync');
     t.end();
