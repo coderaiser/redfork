@@ -9,6 +9,7 @@ import yargsParser from 'yargs-parser';
 import picomatch from 'picomatch';
 
 const joinCwd = (a) => (b) => join(a, b);
+const one = (f) => (a) => f(a)
 
 export default main();
 
@@ -22,24 +23,21 @@ async function main() {
         _,
         pattern,
         version,
-    } = yargsParser(
-        argv.slice(2),
-        {
-            default: {
-                pattern: '*',
-            },
-            boolean: [
-                'version',
-            ],
-            string: [
-                'pattern',
-            ],
-            alias: {
-                p: 'pattern',
-                v: 'version',
-            },
+    } = yargsParser(argv.slice(2), {
+        default: {
+            pattern: '*',
         },
-    );
+        boolean: [
+            'version',
+        ],
+        string: [
+            'pattern',
+        ],
+        alias: {
+            p: 'pattern',
+            v: 'version',
+        },
+    });
     
     if (version) {
         const require = createRequire(import.meta.url);
@@ -52,11 +50,12 @@ async function main() {
         return console.log('nothing to do, exit');
     
     const dir = cwd();
+    const match = picomatch(pattern, {
+        matchBase: true,
+    });
     const dirs = readdirSync('.')
+        .filter(one(match))
         .map(joinCwd(dir))
-        .filter(picomatch(pattern, {
-            matchBase: true,
-        }));
     
     for (const dir of dirs) {
         const [e] = tryCatch(execSync, command, {
