@@ -19,7 +19,7 @@ test('redfork: version', async (t) => {
         argvMock: ['', '', '-v'],
     });
     
-    t.ok(logStub.calledWith(`v${version}`));
+    t.calledWith(logStub, [`v${version}`]);
     t.end();
 });
 
@@ -31,7 +31,7 @@ test('redfork: readdirSync', async (t) => {
         argvMock: ['', '', 'ls'],
     });
     
-    t.ok(readdirSync.calledWith('.'));
+    t.calledWith(readdirSync, ['.']);
     t.end();
 });
 
@@ -54,7 +54,7 @@ test('redfork: execSync', async (t) => {
         },
     ];
     
-    t.ok(execSync.calledWith(...expected));
+    t.calledWith(execSync, expected);
     t.end();
 });
 
@@ -92,7 +92,7 @@ test('redfork: execSync: pattern', async (t) => {
         },
     ];
     
-    t.ok(execSync.calledWith(...expected));
+    t.calledWith(execSync, expected);
     t.end();
 });
 
@@ -109,7 +109,7 @@ test('redfork: execSync: error', async (t) => {
         argvMock,
     });
     
-    t.ok(errorStub.calledWith('hello'));
+    t.calledWith(errorStub, ['hello']);
     t.end();
 });
 
@@ -126,7 +126,7 @@ test('redfork: console.log', async (t) => {
     
     const dir = '/home/abc/dir';
     
-    t.ok(logStub.calledWith(dir));
+    t.calledWith(logStub, [dir]);
     t.end();
 });
 
@@ -139,7 +139,7 @@ test('redfork: no command', async (t) => {
         cwdStub,
     });
     
-    t.ok(logStub.calledWith('nothing to do, exit'));
+    t.calledWith(logStub, ['nothing to do, exit']);
     t.end();
 });
 

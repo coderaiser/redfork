@@ -6,17 +6,17 @@ export default {
     'lint': () => 'putout .',
     'fix:lint': () => run('lint', '--fix'),
     'test:base': () => `tape 'test/**/*.js'`,
-    'test': () => run('test:base', '', {
+    'test': async () => await run('test:base', '', {
         NODE_OPTIONS,
     }),
-    'watch:test': async () => run('watcher', await run('test:base'), {
+    'watch:test': async () => await run('watcher', run('test:base'), {
         NODE_OPTIONS,
     }),
     'watcher': () => 'nodemon -w test -w bin --exec',
     'coverage:base': async () => `c8 ${await run('test:base')}`,
-    'coverage': () => run('coverage:base', '', {
+    'coverage': async () => await run('coverage:base', '', {
         NODE_OPTIONS,
     }),
-    'report': () => 'nyc report --reporter=text-lcov | coveralls',
+    'report': () => 'c8 report --reporter=lcov',
 };
 

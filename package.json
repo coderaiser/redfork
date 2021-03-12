@@ -7,13 +7,6 @@
   "bin": {
     "redfork": "bin/redfork.js"
   },
-  "nyc": {
-    "cache": false,
-    "exclude": [
-      ".*",
-      "test"
-    ]
-  },
   "scripts": {
     "lint": "madrun lint",
     "fix:lint": "madrun fix:lint",
