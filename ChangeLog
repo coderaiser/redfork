@@ -1,3 +1,15 @@
+2021.03.12, v2.2.1
+
+fix:
+- fix(redfork) pattern
+
+
+feature:
+- feature(package) supertape v5.1.0
+- feature(package) putout v15.5.1
+
+
+
 2020.12.05, v2.2.0
 
 feature:
