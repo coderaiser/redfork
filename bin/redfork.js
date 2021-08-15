@@ -9,7 +9,7 @@ import yargsParser from 'yargs-parser';
 import picomatch from 'picomatch';
 
 const joinCwd = (a) => (b) => join(a, b);
-const one = (f) => (a) => f(a)
+const one = (f) => (a) => f(a);
 
 export default main();
 
@@ -55,7 +55,7 @@ async function main() {
     });
     const dirs = readdirSync('.')
         .filter(one(match))
-        .map(joinCwd(dir))
+        .map(joinCwd(dir));
     
     for (const dir of dirs) {
         const [e] = tryCatch(execSync, command, {
