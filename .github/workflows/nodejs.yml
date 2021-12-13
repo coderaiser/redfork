@@ -10,6 +10,7 @@ jobs:
         node-version:
           - 14.x
           - 16.x
+          - 17.x
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
@@ -19,7 +20,7 @@ jobs:
       - name: Install Redrun
         run: npm i redrun -g
       - name: Install
-        run: npm install
+        run: npm install -f
       - name: Bootstrap
         run: redrun bootstrap
       - name: Lint
