@@ -13,7 +13,7 @@ const one = (f) => (a) => f(a);
 
 export default main();
 
-async function main() {
+function main() {
     const {
         cwd,
         argv,
