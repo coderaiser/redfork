@@ -1,204 +1,163 @@
-import {createRequire} from 'module';
-import test from 'supertape';
-import {createMockImport} from 'mock-import';
-import stub from '@cloudcmd/stub';
+import {createRequire} from 'node:module';
+import test, {stub} from 'supertape';
+import {redfork} from '../lib/redfork.js';
 
-const {
-    reImport,
-    mockImport,
-    stopAll,
-} = createMockImport(import.meta.url);
+const require = createRequire(import.meta.url);
 
-test('redfork: version', async (t) => {
-    const logStub = stub();
-    const require = createRequire(import.meta.url);
+test('redfork: version', (t) => {
+    const log = stub();
     const {version} = require('../package');
     
-    await run({
-        logStub,
-        argvMock: ['', '', '-v'],
+    const argv = ['-v'];
+    
+    redfork(argv, {
+        log,
     });
     
-    t.calledWith(logStub, [`v${version}`]);
+    t.calledWith(log, [`v${version}`]);
     t.end();
 });
 
-test('redfork: readdirSync', async (t) => {
+test('redfork: readdirSync', (t) => {
     const readdirSync = stub().returns([]);
     
-    await run({
+    const argv = ['ls'];
+    
+    redfork(argv, {
         readdirSync,
-        argvMock: ['', '', 'ls'],
     });
     
     t.calledWith(readdirSync, ['.']);
     t.end();
 });
 
-test('redfork: execSync', async (t) => {
+test('redfork: execSync', (t) => {
     const readdirSync = stub().returns(['dir']);
-    const cwdStub = stub().returns('/home/abc');
-    const argvMock = ['', '', 'ls'];
+    const cwd = stub().returns('/home/abc');
+    const argv = ['ls'];
     
-    const {execSync} = await run({
+    const execSync = stub();
+    
+    redfork(argv, {
+        execSync,
         readdirSync,
-        cwdStub,
-        argvMock,
+        cwd,
     });
     
-    const cwd = '/home/abc/dir';
-    const expected = [
-        'ls', {
-            stdio: [0, 1, 2, 'pipe'],
-            cwd,
-        },
-    ];
+    const expected = ['ls', {
+        stdio: [
+            0,
+            1,
+            2,
+            'pipe',
+        ],
+        cwd: '/home/abc/dir',
+    }];
     
     t.calledWith(execSync, expected);
     t.end();
 });
 
-test('redfork: execSync: pattern: not match', async (t) => {
+test('redfork: execSync: pattern: not match', (t) => {
     const readdirSync = stub().returns(['dir']);
-    const cwdStub = stub().returns('/home/abc');
-    const argvMock = [
-        '',
-        '',
+    const cwd = stub().returns('/home/abc');
+    const argv = [
         'ls',
         '-p',
         'hello*',
     ];
     
-    const {execSync} = await run({
+    const execSync = stub();
+    
+    redfork(argv, {
         readdirSync,
-        cwdStub,
-        argvMock,
+        cwd,
     });
     
-    t.notOk(execSync.called, 'should not call execSync');
+    t.notCalled(execSync, 'should not call execSync');
     t.end();
 });
 
-test('redfork: execSync: pattern', async (t) => {
+test('redfork: execSync: pattern', (t) => {
     const readdirSync = stub().returns(['hello-world']);
-    const cwdStub = stub().returns('/home/abc');
-    const argvMock = [
-        '',
-        '',
+    const cwd = stub().returns('/home/abc');
+    const execSync = stub();
+    
+    const argv = [
         'ls',
         '-p',
         'hello*',
     ];
     
-    const {execSync} = await run({
-        readdirSync,
-        cwdStub,
-        argvMock,
-    });
-    
-    const cwd = '/home/abc/hello-world';
-    const expected = [
-        'ls', {
-            stdio: [0, 1, 2, 'pipe'],
-            cwd,
-        },
-    ];
-    
-    t.calledWith(execSync, expected);
-    t.end();
-});
-
-test('redfork: execSync: error', async (t) => {
-    const readdirSync = stub().returns(['dir']);
-    const execSync = stub().throws(Error('hello'));
-    const cwdStub = stub().returns('/home/abc');
-    const argvMock = ['', '', 'ls'];
-    
-    const {errorStub} = await run({
+    redfork(argv, {
         readdirSync,
         execSync,
-        cwdStub,
-        argvMock,
+        cwd,
     });
     
-    t.calledWith(errorStub, ['hello']);
+    const expected = ['ls', {
+        stdio: [
+            0,
+            1,
+            2,
+            'pipe',
+        ],
+        cwd: '/home/abc/hello-world',
+    }];
+    
+    t.calledWith(execSync, expected);
     t.end();
 });
 
-test('redfork: console.log', async (t) => {
+test('redfork: execSync: error', (t) => {
     const readdirSync = stub().returns(['dir']);
-    const cwdStub = stub().returns('/home/abc');
-    const argvMock = ['', '', 'ls'];
+    const execSync = stub().throws(Error('hello'));
+    const cwd = stub().returns('/home/abc');
+    const logError = stub();
     
-    const {logStub} = await run({
+    const argv = ['ls'];
+    
+    redfork(argv, {
         readdirSync,
-        cwdStub,
-        argvMock,
+        execSync,
+        cwd,
+        logError,
+    });
+    
+    t.calledWith(logError, ['hello']);
+    t.end();
+});
+
+test('redfork: console.log', (t) => {
+    const readdirSync = stub().returns(['dir']);
+    const cwd = stub().returns('/home/abc');
+    const log = stub();
+    
+    const argv = ['ls'];
+    
+    redfork(argv, {
+        log,
+        readdirSync,
+        cwd,
     });
     
     const dir = '/home/abc/dir';
     
-    t.calledWith(logStub, [dir]);
+    t.calledWith(log, [dir]);
     t.end();
 });
 
-test('redfork: no command', async (t) => {
+test('redfork: no command', (t) => {
     const readdirSync = stub().returns(['dir']);
-    const cwdStub = stub().returns('/home/abc');
+    const cwd = stub().returns('/home/abc');
+    const log = stub();
     
-    const {logStub} = await run({
+    redfork([], {
+        log,
         readdirSync,
-        cwdStub,
+        cwd,
     });
     
-    t.calledWith(logStub, ['nothing to do, exit']);
+    t.calledWith(log, ['nothing to do, exit']);
     t.end();
 });
-
-async function run(stubs = {}) {
-    const {argv, cwd} = process;
-    const {log, error} = console;
-    
-    const {
-        readdirSync = stub(),
-        execSync = stub(),
-        cwdStub = stub(),
-        logStub = stub(),
-        errorStub = stub(),
-        argvMock = ['', ''],
-    } = stubs;
-    
-    console.log = logStub;
-    console.error = errorStub;
-    
-    process.cwd = cwdStub;
-    process.argv = argvMock;
-    
-    mockImport('fs', {
-        readdirSync,
-    });
-    
-    mockImport('child_process', {
-        execSync,
-    });
-    
-    const redfork = await reImport('..');
-    await redfork;
-    
-    stopAll();
-    
-    process.argv = argv;
-    process.cwd = cwd;
-    
-    console.log = log;
-    console.error = error;
-    
-    return {
-        readdirSync,
-        execSync,
-        cwdStub,
-        logStub,
-        errorStub,
-    };
-}
-

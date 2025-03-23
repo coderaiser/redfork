@@ -3,3 +3,4 @@ test
 coverage
 img
 yarn-error.log
+*.config.*
