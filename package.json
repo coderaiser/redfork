@@ -44,7 +44,7 @@
     "yargs-parser": "^21.0.0"
   },
   "devDependencies": {
-    "@cloudcmd/stub": "^3.1.0",
+    "@cloudcmd/stub": "^4.0.1",
     "c8": "^7.3.5",
     "coveralls": "^3.0.0",
     "eslint": "^8.0.0-beta.0",
@@ -54,7 +54,6 @@
     "mock-import": "^1.0.0",
     "mock-require": "^3.0.3",
     "nodemon": "^2.0.0",
-    "nyc": "^15.0.0",
     "putout": "^22.7.0",
     "supertape": "^6.10.0"
   },
