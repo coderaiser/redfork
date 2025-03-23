@@ -23,6 +23,16 @@ npm i redfork -g
 # Usage
 
 ```
+Usage: redfork [options] [command]
+Options:
+  -p, --pattern           apply directory pattern, defaults to '*'
+  -h, --help              display this help and exit
+  -v, --version           output version information and exit
+```
+
+You can, for example, run the command `ls -lha` in all directories that located in current `pwd`:
+
+```
 redfork 'ls -lha'
 ```
 

@@ -161,3 +161,18 @@ test('redfork: no command', (t) => {
     t.calledWith(log, ['nothing to do, exit']);
     t.end();
 });
+
+test('redfork: --help', (t) => {
+    const help = require('../help.json');
+    const log = stub();
+    
+    redfork(['--help'], {
+        log,
+    });
+    
+    const [result] = log.args[0];
+    
+    t.match(result, 'Usage: redfork');
+    t.end();
+});
+
