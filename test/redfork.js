@@ -163,7 +163,6 @@ test('redfork: no command', (t) => {
 });
 
 test('redfork: --help', (t) => {
-    const help = require('../help.json');
     const log = stub();
     
     redfork(['--help'], {
