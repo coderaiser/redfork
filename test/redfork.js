@@ -174,4 +174,3 @@ test('redfork: --help', (t) => {
     t.match(result, 'Usage: redfork');
     t.end();
 });
-
