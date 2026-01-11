@@ -36,7 +36,7 @@
   "homepage": "https://github.com/coderaiser/redfork",
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "picomatch": "^4.0.2",
