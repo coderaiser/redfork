@@ -41,7 +41,7 @@
   "dependencies": {
     "picomatch": "^4.0.2",
     "try-catch": "^4.0.7",
-    "yargs-parser": "^21.0.0"
+    "yargs-parser": "^22.0.0"
   },
   "devDependencies": {
     "c8": "^10.1.3",
