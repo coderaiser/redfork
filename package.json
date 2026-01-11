@@ -1,6 +1,6 @@
 {
   "name": "redfork",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "run command in all sub dirs",
   "type": "module",
   "main": "bin/redfork.js",

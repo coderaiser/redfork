@@ -1,3 +1,14 @@
+2026.01.11, v4.0.0
+
+feature:
+- df955c0 redfork: drop support of node < 22
+- c0a77a0 redfork: yargs-parser v22.0.0
+- d8716b2 redfork: try-catch v4.0.7
+- e1e4388 redfork: supertape v12.0.9
+- 1cbd8d7 redfork: putout v41.6.4
+- 2005230 redfork: madrun v12.1.0
+- 8c05287 redfork: eslint-plugin-putout v29.3.0
+
 2025.03.23, v3.1.0
 
 feature:
