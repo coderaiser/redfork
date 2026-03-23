@@ -61,6 +61,7 @@ test('redfork: execSync', (t) => {
 test('redfork: execSync: pattern: not match', (t) => {
     const readdirSync = stub().returns(['dir']);
     const cwd = stub().returns('/home/abc');
+    
     const argv = [
         'ls',
         '-p',

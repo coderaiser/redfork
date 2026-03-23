@@ -1,7 +1,9 @@
-.nyc_output
-node_modules
-
-coverage
 *.swp
-yarn-error.log
+*.log
+*.lock
+
+.nyc_output
 .idea
+
+node_modules
+coverage

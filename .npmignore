@@ -1,6 +1,9 @@
+*.config.*
+*.log
+*.loc
+
 .*
+
 test
 coverage
 img
-yarn-error.log
-*.config.*
